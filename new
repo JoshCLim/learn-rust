@@ -1,0 +1,23 @@
+#!/opt/homebrew/bin/python3
+
+import subprocess
+import re
+
+
+def snake_case(s):
+    # from https://www.w3resource.com/python-exercises/string/python-data-type-string-exercise-97.php
+    return '_'.join(
+        re.sub('([A-Z][a-z]+)', r' \1',
+               re.sub('([A-Z]+)', r' \1',
+                      s.replace('-', ' '))).split()).lower()
+
+
+wk = int(input("Week? "))
+num = int(input("Number? "))
+name = snake_case(input("Name? "))
+
+projectName = f"wk{wk}_{num:02d}_{name}"
+subprocess.run(["cargo", "new", "--vcs=none",  projectName])
+with open(f"{projectName}/.gitignore", "a") as f:
+    subprocess.run(["echo", "/target"], stdout=f)
+subprocess.run(["code", projectName])
